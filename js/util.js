@@ -1,5 +1,7 @@
 'use strict'
 
+var gStartTime
+var gInterval
 
 function countNeighbors(cellI, cellJ, mat) {
     var neighborsCount = 0
@@ -13,4 +15,38 @@ function countNeighbors(cellI, cellJ, mat) {
         }
     }
     return neighborsCount
+}
+
+
+function renderCell(location) {
+    const cellSelector = '.' + getClassName(location) // cell-i-j
+    const elCell = document.querySelector(cellSelector)
+    return elCell
+    
+}
+
+
+function getClassName(location) {
+    const cellClass = 'cell-' + location.i + '-' + location.j
+    return cellClass
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function startTimer() {
+    gStartTime = Date.now() 
+    gInterval = setInterval(() => {
+        const seconds = (Date.now() - gStartTime) / 1000
+        var elTimer = document.querySelector('.timer')
+        elTimer.innerText = seconds.toFixed(2)
+    }, 1);
+}
+
+function resetTime() {
+    var elTimer = document.querySelector('.timer')
+    elTimer.innerText = '0.00'
 }

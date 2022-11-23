@@ -4,3 +4,16 @@
     height: 40px;
     text-align: center;
 }
+
+table{
+    margin-right: auto;
+    margin-left: auto;
+}
+
+div{
+    text-align: center;
+}
+
+.timer {
+    color: black;
+}
