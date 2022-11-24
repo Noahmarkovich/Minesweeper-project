@@ -5,38 +5,68 @@ const FLAG = '🚩'
 const EMPTY = ''
 
 var gBoard 
-
 var gGame 
+var gLevel = {
+    size: 4,
+    mines: 2
+   }
+var gStartTime
+var gInterval
+var gLives
+var gCellsIndexes
 
-var gLevel
-   
-   
+function changeLevel(level){
+    if (level === 'beginner' ) {
+        gLevel = {
+            size: 4,
+            mines: 2
+           }
+        onInit()
+    }if (level === 'medium' ) {
+        gLevel = {
+            size: 8,
+            mines: 14
+           }
+        onInit()
+    } if (level === 'expert' ) {
+        gLevel = {
+            size: 12,
+            mines: 32
+           }
+        onInit()
+    }
+    
+}
+
+// console.log(changeLevel())
 
 function onInit(){
-    resetTime()
     clearInterval(gInterval)
+    resetTime()
+    gLives = 3
+    var elLives = document.querySelector('.lives span')
+    elLives.innerText = gLives
     const emoji = document.querySelector('.restart')
     emoji.innerText = '😁'
+    gCellsIndexes = []
     gGame = {
         isOn: true,
         shownCount: 0,
         markedCount: 0,
         secsPassed: 0
     }
-    gLevel = {
-        size: 4,
-        mines: 2
-       }
     gBoard = buildBoard(gLevel.size)
     renderBoard(gBoard)
-    setMinesNegsCount(gBoard)
+    // setMinesNegsCount(gBoard)
 }
+
+
+
 
 
 
 function buildBoard(size){
     var board = []
-    var cellsIndexes = []
     for (var i = 0; i < size; i++) {
         board[i] = []
         for (var j = 0; j < size ; j++) {
@@ -44,10 +74,10 @@ function buildBoard(size){
                             isShown: false,
                             isMine: false,
                             isMarked: false}
-            cellsIndexes.push({i:i,j:j})
+            gCellsIndexes.push({i:i,j:j})
         }
     }
-    setRandomMines(board, cellsIndexes, gLevel.mines)
+    // setRandomMines(board, cellsIndexes, gLevel.mines)
     return board
 }
 
@@ -57,7 +87,9 @@ function setRandomMines(board, cellsIndexes, mines){
     for (var i = 0; i < mines; i++){
         var index = getRandomInt(0, cellsIndexes.length)
         minePos = cellsIndexes[index]
+        console.log(minePos)
         board[minePos.i][minePos.j].isMine = true
+        console.log(board[minePos.i][minePos.j])
         cellsIndexes.splice(index,1)  
     } 
 
@@ -69,7 +101,7 @@ function renderBoard(board) {
     for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>\n'
         for (var j = 0; j < board[0].length; j++) {
-            const currCell = board[i][j]
+            // const currCell = board[i][j]
             var cellClass = getClassName({ i: i, j: j })
             
             strHTML += `\t<td class= "cell ${cellClass}" onclick= "cellClicked(this, ${i}, ${j})" oncontextmenu= "cellMarked(this)"  >\n`
@@ -94,12 +126,18 @@ function setMinesNegsCount(board){
 
 
 function cellClicked(elCell, i , j) {
-    if(gGame.shownCount >= 1) startTimer()
+    if(gGame.shownCount === 0) {
+        setRandomMines(gBoard, gCellsIndexes, gLevel.mines)
+        setMinesNegsCount(gBoard)
+        startTimer()
+    }
     if (!gGame.isOn) return
-    if(gBoard[i][j].isMine) gameOver(elCell) 
     if (gBoard[i][j].isMarked) return
     if (gBoard[i][j].isMine) {
         elCell.innerText = MINE
+        gLives -- 
+        var elLives = document.querySelector('.lives span')
+        elLives.innerText = gLives
     }else if (gBoard[i][j].minesAroundCount !==0 ) {
         gBoard[i][j].isMarked = true
         gBoard[i][j].isShown = true
@@ -113,7 +151,7 @@ function cellClicked(elCell, i , j) {
         elCell.innerText = EMPTY
         expandShown(gBoard, i , j)
     }
-    
+    if(gBoard[i][j].isMine && gLives === 0) gameOver(elCell) 
     checkGameOver()
     
 }
@@ -155,9 +193,9 @@ function cellMarked(elCell){
 
 function checkGameOver() {
     if (gGame.markedCount === gLevel.mines && gGame.shownCount === (gLevel.size)**2 - gLevel.mines ){
+        clearInterval( gInterval)
         console.log ('you won')
         gGame.isOn = false
-        clearInterval( gInterval)
         const emoji = document.querySelector('.restart')
         emoji.innerText = '😎'
     }

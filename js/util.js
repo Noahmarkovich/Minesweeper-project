@@ -1,7 +1,6 @@
 'use strict'
 
-var gStartTime
-var gInterval
+
 
 function countNeighbors(cellI, cellJ, mat) {
     var neighborsCount = 0
@@ -40,7 +39,7 @@ function getRandomInt(min, max) {
 function startTimer() {
     gStartTime = Date.now() 
     gInterval = setInterval(() => {
-        const seconds = (Date.now() - gStartTime) / 1000
+        const seconds = (Date.now() - gStartTime) / 60000
         var elTimer = document.querySelector('.timer')
         elTimer.innerText = seconds.toFixed(2)
     }, 1);
