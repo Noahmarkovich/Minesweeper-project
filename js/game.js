@@ -4,6 +4,10 @@ const MINE = '💣'
 const FLAG = '🚩'
 const EMPTY = ''
 
+
+var gHintsLeft 
+var gIsHintOn = false
+var gHintsIntervalId
 var gBoard 
 var gGame 
 var gLevel = {
@@ -45,8 +49,11 @@ function onInit(){
     clearInterval(gInterval)
     resetTime()
     gLives = 3
+    gHintsLeft = 3
+    var elHint = document.querySelector('.hint')
+    elHint.innerText = '💡'.repeat(gHintsLeft)
     var elLives = document.querySelector('.lives span')
-    elLives.innerText = gLives
+    elLives.innerText = '❤️❤️❤️'
     const emoji = document.querySelector('.restart')
     emoji.innerText = '😁'
     gCellsIndexes = []
@@ -126,6 +133,7 @@ function setMinesNegsCount(board){
 
 
 function cellClicked(elCell, i , j) {
+    if (gBoard[i][j].isMarked) return
     if(gGame.shownCount === 0) {
         setRandomMines(gBoard, gCellsIndexes, gLevel.mines)
         setMinesNegsCount(gBoard)
@@ -136,17 +144,22 @@ function cellClicked(elCell, i , j) {
         gGame.shownCount ++
         elCell.innerText = EMPTY
         expandShown(gBoard, i , j)
+    }if(gIsHintOn) {
+        expandShownOnHint(gBoard, i, j)
+        gHintsIntervalId = setTimeout(()=> {
+            cancelShown(gBoard, i, j)
+            gIsHintOn =false
+        }, 1000)   
+        return
     }
     if (!gGame.isOn) return
     if (gBoard[i][j].isFlaged) return
-    if (gBoard[i][j].isMarked) return
     if (gBoard[i][j].isMine) {
         elCell.innerText = MINE
         gLives -- 
-        elCell.classList.add('clicked')
         elCell.classList.add('onMine')
         var elLives = document.querySelector('.lives span')
-        elLives.innerText = gLives
+        elLives.innerText = '❤️'.repeat(gLives)
     }else if (gBoard[i][j].minesAroundCount !==0 ) {
         gBoard[i][j].isMarked = true
         gBoard[i][j].isShown = true
@@ -159,11 +172,11 @@ function cellClicked(elCell, i , j) {
             gGame.shownCount ++
         }
         gBoard[i][j].isShown = true
-        gBoard[i][j].isMarked
+        gBoard[i][j].isMarked= true
         elCell.innerText = EMPTY
         expandShown(gBoard, i , j)
     }
-    if(gBoard[i][j].isMine && gLives === 0) gameOver(elCell) 
+    if(gBoard[i][j].isMine && gLives === 0) gameOver() 
     
     checkGameOver()
     
@@ -199,6 +212,58 @@ function expandShown(board, cellI, cellJ) {
             } 
         }
     }
+
+    function expandShownOnHint(board, cellI, cellJ) {
+        var elCell
+        for (var i = cellI - 1; i <= cellI + 1; i++) {
+            if (i < 0 || i >= board.length) continue
+            for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+                if (j < 0 || j >= board[i].length) continue
+                if (board[i][j].isShown) continue
+                if (board[i][j].minesAroundCount !== 0 && !board[i][j].isMine){
+                    elCell = renderCell({i,j})
+                    elCell.innerText = board[i][j].minesAroundCount
+                    elCell.classList.add('clicked')
+                }else if(gBoard[i][j].minesAroundCount ===0 && !board[i][j].isMine) {
+                    elCell = renderCell({i,j})
+                    elCell.innerText = EMPTY
+                    elCell.classList.add('clicked')
+                }else if(board[i][j].isMine) {
+                    elCell = renderCell({i,j})
+                    elCell.innerText = MINE
+                    elCell.classList.add('clicked')
+                }
+                } 
+            }
+        }
+    function cancelShown(board, cellI, cellJ) {
+        var elCell
+        for (var i = cellI - 1; i <= cellI + 1; i++) {
+            if (i < 0 || i >= board.length) continue
+            for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+                if (j < 0 || j >= board[i].length) continue
+                if (board[i][j].isShown) continue
+                elCell = renderCell({i,j})
+                elCell.innerText = EMPTY
+                elCell.classList.remove('clicked')
+                if(board[i][j].isMine) elCell.classList.remove('onMine')
+                
+                // if (board[i][j].minesAroundCount !== 0 && !board[i][j].isMine){
+                //     elCell = renderCell({i,j})
+                //     elCell.innerText = board[i][j].minesAroundCount
+                //     elCell.classList.add('clicked')
+                // }else if(gBoard[i][j].minesAroundCount ===0) {
+                //     elCell = renderCell({i,j})
+                //     elCell.innerText = EMPTY
+                //     elCell.classList.add('clicked')
+                // }else if(board[i][j].isMine) {
+                //     elCell = renderCell({i,j})
+                //     elCell.innerText = MINE
+                //     elCell.classList.add('clicked')
+                // }
+                } 
+            }
+        }
 
 
 function cellMarked(elCell, i , j){
@@ -243,5 +308,14 @@ function gameOver(){
     const emoji = document.querySelector('.restart')
     emoji.innerText = '😵'
     console.log('YOU LOST')
+}
+
+
+
+function giveHint(elHint){
+    clearInterval(gHintsIntervalId)
+    gIsHintOn =true
+    gHintsLeft--
+    elHint.innerText = '💡'.repeat(gHintsLeft)
 }
 

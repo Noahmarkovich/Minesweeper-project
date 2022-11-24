@@ -12,18 +12,20 @@
 <button onclick="changeLevel('beginner')">Beginner</button>
 <button onclick="changeLevel('medium')">Medium</button>
 <button onclick="changeLevel('expert')">Expert</button>
-</div>
 <div class="timer"> 0:00 </div>
-<div class="lives"> You have <span>3</span> lives </div>
+<div class="lives"> <span>❤️❤️❤️</span> </div>
 <div class="restart" onclick="onInit()"> 😁 </div>
   <table oncontextmenu="return false">
     <tbody class="board"></tbody>
   </table>
+<div data-num="3" class="hint" onclick="giveHint(this)"> <span>💡💡💡</span> </div>
+</div>
   <footer>
     Noah Markovich
   </footer>
   <script src="js/util.js"></script>
   <script src="js/game.js"></script>
+
 </body>
 
 </html>
