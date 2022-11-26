@@ -9,16 +9,19 @@
 <body onkeyup="onHandleKey(event)" onload="onInit()">
   <h1>Mine Sweeper</h1>
 <div class="container">
+<div class="undo" title="Undo" onclick="undoStep()">↩️</div>
 <button onclick="changeLevel('beginner')">Beginner</button>
 <button onclick="changeLevel('medium')">Medium</button>
 <button onclick="changeLevel('expert')">Expert</button>
-<div class="timer"> 0:00 </div>
 <div class="lives"> <span>❤️❤️❤️</span> </div>
+<div class="timer"> 0:00 </div>
+<div class="counter"> </div>
 <div class="restart" onclick="onInit()"> 😁 </div>
   <table oncontextmenu="return false">
     <tbody class="board"></tbody>
   </table>
-<div data-num="3" class="hint" onclick="giveHint(this)"> <span>💡💡💡</span> </div>
+<div class="hint" title="Hint" onclick="giveHint(this)"> <span>💡💡💡</span> </div>
+<div class="safe" title="Safe Click" onclick="onSafeClick(this)">🔎🔎🔎</div>
 </div>
   <footer>
     Noah Markovich
