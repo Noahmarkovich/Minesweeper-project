@@ -368,39 +368,40 @@ function onSafeClick(elSafeClick){
                     
 }
 
-function undoStep(){
-    gIsUndo = true
-    console.log(gCurrCells)
-    var currCell =gCurrCells[gCurrCells.length-1]
-    console.log(currCell)
-    gCurrCells.splice(gCurrCells.length-1, 1)
-    var elCell = renderCell(currCell)
-    console.log(gCurrCells)
-    if (!gGame.isOn) return
-    if (gBoard[currCell.i][currCell.i].isMine) {
-        elCell.classList.remove('onMine')
-        elCell.innerText = EMPTY
-        gIsUndo = false
-    }if (gBoard[currCell.i][currCell.i].minesAroundCount !==0 ) {
-        elCell.classList.remove('clicked')
-        elCell.innerText = EMPTY
-        gBoard[currCell.i][currCell.i].isMarked = false
-        gBoard[currCell.i][currCell.i].isShown = false
-        gGame.shownCount --
-        gIsUndo = false
-    }if (gBoard[currCell.i][currCell.i].minesAroundCount ===0){
-        elCell.classList.remove('clicked')
-        cancelShown(gBoard, currCell.i, currCell.j) 
-        gIsUndo = false
-    } 
+//not working very well :(
+// function undoStep(){ 
+//     gIsUndo = true
+//     console.log(gCurrCells)
+//     var currCell =gCurrCells[gCurrCells.length-1]
+//     console.log(currCell)
+//     gCurrCells.splice(gCurrCells.length-1, 1)
+//     var elCell = renderCell(currCell)
+//     console.log(gCurrCells)
+//     if (!gGame.isOn) return
+//     if (gBoard[currCell.i][currCell.i].isMine) {
+//         elCell.classList.remove('onMine')
+//         elCell.innerText = EMPTY
+//         gIsUndo = false
+//     }if (gBoard[currCell.i][currCell.i].minesAroundCount !==0 ) {
+//         elCell.classList.remove('clicked')
+//         elCell.innerText = EMPTY
+//         gBoard[currCell.i][currCell.i].isMarked = false
+//         gBoard[currCell.i][currCell.i].isShown = false
+//         gGame.shownCount --
+//         gIsUndo = false
+//     }if (gBoard[currCell.i][currCell.i].minesAroundCount ===0){
+//         elCell.classList.remove('clicked')
+//         cancelShown(gBoard, currCell.i, currCell.j) 
+//         gIsUndo = false
+//     } 
     
-        // if (!gBoard[currCell.i][currCell.i].isShown) {
-        //     gGame.shownCount --
-        // }
-        // gBoard[i][j].isShown = true
-        // gBoard[i][j].isMarked= true
-        // elCell.innerText = EMPTY
-        // expandShown(gBoard, i , j)
+//         // if (!gBoard[currCell.i][currCell.i].isShown) {
+//         //     gGame.shownCount --
+//         // }
+//         // gBoard[i][j].isShown = true
+//         // gBoard[i][j].isMarked= true
+//         // elCell.innerText = EMPTY
+//         // expandShown(gBoard, i , j)
      
 
-}
+// }

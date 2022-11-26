@@ -60,7 +60,7 @@ div{
     border: 1px solid black;
     background-color: rgb(73, 3, 3);
     position: absolute;
-    left: 52.5%
+    left: 52%
 }
 
 .lives{
@@ -76,7 +76,7 @@ footer{
 }
 .counter{
     position: absolute;
-    left: 44%;
+    left: 45%;
     font-family: 'Machine';
     font-size: 30px;
     color: red;
@@ -96,7 +96,7 @@ footer{
     margin : auto;
     background-color: rgb(189, 194, 197);
     font-size: 20px;
-    left: 48%;
+    left: 48.5%;
 }
 button{
     margin-bottom: 10px;
